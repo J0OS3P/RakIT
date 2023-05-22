@@ -1,3 +1,3 @@
 # RakIT
-versioonihalduse harjutamisega GitHubis.
+Harjutamine
 Harjutamine
