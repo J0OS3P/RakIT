@@ -1,0 +1,2 @@
+# RakIT
+versioonihalduse harjutamisega GitHubis.
