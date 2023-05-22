@@ -1,3 +1,2 @@
 # RakIT
 Harjutamine
-Harjutamine
