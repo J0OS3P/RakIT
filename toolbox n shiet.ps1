@@ -1,4 +1,4 @@
-﻿Add-Type -AssemblyName PresentationFramework
+Add-Type -AssemblyName PresentationFramework
 
 # Loo põhaken
 [xml]$xaml = @"
@@ -20,6 +20,17 @@
                 </ScrollViewer>
             </TabItem>
         </TabControl>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10">
+            <Button Name="EnableHyperVButton" Content="Enable Hyper-V" Margin="5"/>
+            <Button Name="RebootPCButton" Content="Reboot PC" Margin="5"/>
+            <Button Name="ShutdownPCButton" Content="Shutdown PC" Margin="5"/>
+            <Button Name="OpenChromeButton" Content="Open Chrome" Margin="5"/>
+            <Button Name="OpenCalculatorButton" Content="Open Calculator" Margin="5"/>
+            <Button Name="CheckIPv4Button" Content="Check IPv4 Address" Margin="5"/>
+            <Button Name="OpenSnippingToolButton" Content="Open Snipping Tool" Margin="5"/>
+            <Button Name="OpenGitHubButton" Content="Open GitHub" Margin="5"/>
+            <Button Name="MuteAudioButton" Content="Mute Audio" Margin="5"/>
+        </StackPanel>
         <Button Name="ProcessButton" Content="Apply Selected Options" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,10,0,10" Width="200"/>
     </Grid>
 </Window>
@@ -33,6 +44,54 @@ $Window = [Windows.Markup.XamlReader]::Load($reader)
 $DebloaterStackPanel = $Window.FindName("DebloaterStackPanel")
 $ProcessKillerStackPanel = $Window.FindName("ProcessKillerStackPanel")
 $ProcessButton = $Window.FindName("ProcessButton")
+$EnableHyperVButton = $Window.FindName("EnableHyperVButton")
+$RebootPCButton = $Window.FindName("RebootPCButton")
+$ShutdownPCButton = $Window.FindName("ShutdownPCButton")
+$OpenChromeButton = $Window.FindName("OpenChromeButton")
+$OpenCalculatorButton = $Window.FindName("OpenCalculatorButton")
+$CheckIPv4Button = $Window.FindName("CheckIPv4Button")
+$OpenSnippingToolButton = $Window.FindName("OpenSnippingToolButton")
+$OpenGitHubButton = $Window.FindName("OpenGitHubButton")
+$MuteAudioButton = $Window.FindName("MuteAudioButton")
+
+# Button Click Events
+$EnableHyperVButton.Add_Click({
+    Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -NoRestart
+    [System.Windows.MessageBox]::Show("Hyper-V has been enabled. Please reboot your PC for changes to take effect.")
+})
+
+$RebootPCButton.Add_Click({
+    Restart-Computer -Force
+})
+
+$ShutdownPCButton.Add_Click({
+    Stop-Computer -Force
+})
+
+$OpenChromeButton.Add_Click({
+    Start-Process "chrome.exe"
+})
+
+$OpenCalculatorButton.Add_Click({
+    Start-Process "calc.exe"
+})
+
+$CheckIPv4Button.Add_Click({
+    $ipv4 = (Get-NetIPAddress -AddressFamily IPv4 | Select-Object -First 1).IPAddress
+    [System.Windows.MessageBox]::Show("Your IPv4 address is: $ipv4")
+})
+
+$OpenSnippingToolButton.Add_Click({
+    Start-Process "SnippingTool.exe"
+})
+
+$OpenGitHubButton.Add_Click({
+    Start-Process "https://github.com/J0OS3P/RakIT"
+})
+
+$MuteAudioButton.Add_Click({
+    nircmd.exe mutesysvolume 1
+})
 
 # Debloateri valikud
 $debloaterOptions = @(
@@ -55,7 +114,7 @@ $debloaterOptions = @(
     "Safe Mode Compatibility",
     "Undo Changes",
     "Regular Updates",
-    "Compatibility Checks"
+    "Compatibility Checks",
     "+8GB RAM"
 )
 
@@ -224,9 +283,7 @@ $ProcessButton.Add_Click({
                 Set-Service -Name "Spooler" -StartupType Disabled
             }
             "Fax" {
-                Stop-Service
-
- -Name "Fax" -Force
+                Stop-Service -Name "Fax" -Force
                 Set-Service -Name "Fax" -StartupType Disabled
             }
             "Windows Update (can be disabled temporarily)" {
